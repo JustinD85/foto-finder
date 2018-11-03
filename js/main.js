@@ -2,6 +2,21 @@ const uploadLabel = get(".file-selector-label");
 const fileElem = get("#img-upload");
 const imgsOnDomElem = get(".card-area");
 
+const dataModelsClosure = () => {
+  const dataModels = [];
+  return () => {
+    return {
+      add: (img, inTitle, inCaption, inUrl, inFav) => {
+        img = new Photo(1, inTitle, inCaption, inUrl, inFav);
+        //Add to DOM
+        //Push to localstorage
+      },
+      remove: 'remove from local storage and datamodel',
+      update: 'update local storage and datamodel'
+    }
+  }
+}
+
 uploadLabel.addEventListener('click', function (e) {
   if (fileElem) {
     fileElem.click();
