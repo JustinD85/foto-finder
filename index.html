@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="cs/normalize.css">
+    <link rel="stylesheet" href="cs/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous">
+  </head>
+
+  <body>
+    <nav>
+      <span class="title">FOTO<i class="fas fa-camera"></i>FINDER</span>
+      <div class="search-div">
+        <input type="text" id="search" placeholder="Search">
+        <button class="search-icon"><i class="fas fa-search"></i></button>
+      </div>
+    </nav>
+    <article class="upload">
+      <form>
+        <label for="title-input">Title</label>
+        <input type="text" class="full-w" id="title-input">
+        <label for="caption-input">Caption</label>
+        <input type="text" class="full-w" id="caption-input">
+        <button class="full-w">Choose File</button>
+        <button class="half-w">View Favorite</button>
+        <button class="half-w">Add to Album</button>
+      </form>
+    </article>
+    <main class="card-area">
+      <div class="card">
+        <p class="card-title">WaterFall Image</p>
+        <img src="imgs/waterfall.png" alt="" class="card-img">
+        <p class="card-desc">Lorem ipsum etc and so forth</p>
+        <footer>
+          <span class="card-trash"><i class="fas fa-trash-alt"></i></span>
+          <span class="card-fav"><i class="fas fa-heart"></i></span>
+        </footer>
+      </div>
+    </main>
+  </body>
+
+</html>
