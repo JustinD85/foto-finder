@@ -7,13 +7,20 @@ class Photo {
     this.favorite = inFav || false;
   }
 
-  saveToStorage() {
-
+  saveToStorage(imgArr, isNew) {
+    if (isNew) {
+      imgArr.push(this);
+    }
+    localStorage.setItem('imgs', JSON.stringify(imgArr));
   }
-  deleteFromStorage() {
-
+  deleteFromStorage(imgArr, index) {
+    imgArr.splice(index, 1);
+    this.saveToStorage(imgArr);
   }
-  updatePhoto() {
-
+  updatePhoto(title, imgUrl, caption, isFav) {
+    this.title = title;
+    this.file = imgUrl;
+    this.caption = caption;
+    this.favorite = isFav || false;
   }
 }
