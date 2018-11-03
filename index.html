@@ -29,13 +29,18 @@
         <input type="text" class="full-w" id="title-input">
         <label for="caption-input">Caption</label>
         <input type="text" class="full-w" id="caption-input">
-        <button class="full-w">Choose File</button>
+        <label class="full-w text-c file-selector-label" for="img-upload">
+          Choose File </label>
+        <input type="file" class="hide" id="img-upload" onchange="upload(this.files)">
+
+
         <button class="half-w">View Favorite</button>
         <button class="half-w">Add to Album</button>
       </form>
     </article>
     <main class="card-area">
-      <div class="card">
+
+      <section class="card">
         <p class="card-title">WaterFall Image</p>
         <img src="imgs/waterfall.png" alt="" class="card-img">
         <p class="card-desc">Lorem ipsum etc and so forth</p>
@@ -43,8 +48,10 @@
           <span class="card-trash"><i class="fas fa-trash-alt"></i></span>
           <span class="card-fav"><i class="fas fa-heart"></i></span>
         </footer>
-      </div>
+      </section>
+
     </main>
+    <script src="js/main.js"></script>
   </body>
 
 </html>
