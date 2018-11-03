@@ -34,7 +34,7 @@ function addToDOM(imgURL) {
   newCard.classList.add('card');
   newCard.innerHTML = `\
   <p class="card-title">${title}</p>
-  <img src="${imgURL}" alt="" class="card-img">
+  <img src="${imgURL}" alt="images upload from users" class="card-img">
   <p class="card-desc">${caption}</p>
   <footer>
     <span class="card-trash"><i class="fas fa-trash-alt"></i></span>
