@@ -3,7 +3,7 @@ class Photo {
     this.id = inId;
     this.title = inTitle;
     this.caption = inCaption;
-    this.file = inURL;
+    this.file = inURL || 'nothing';
     this.favorite = inFav || false;
   }
 

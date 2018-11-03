@@ -1,7 +1,8 @@
 const uploadLabel = get('#file-selector-label');
 const fileInput = get('#img-upload');
 const imgsOnDomElem = get('#card-area');
-const addToCardArea = get('#add')
+const addToCardArea = get('#add');
+const reader = new FileReader();
 
 const images = (() => {
   const imagesArray = [];
@@ -18,6 +19,7 @@ const images = (() => {
         }
         const title = get('#title-input').value;
         const caption = get('#caption-input').value;
+        // console.log(inUrl);
         const newImg = new Photo(nextId, title, caption, inUrl, false);
         //add to temp
         tempImg = newImg;
@@ -26,7 +28,7 @@ const images = (() => {
       update: 'update local storage and datamodel',
       get: () => (imagesArray),
       publish: () => {
-        console.log('clearing!');
+        console.log('Publishing!');
         get('#card-area').innerHTML = '';
         if (tempImg) {
           imagesArray.push(tempImg);
@@ -36,91 +38,45 @@ const images = (() => {
 
           addToDOM(e)
         })
-        // fetchimage();
       }
     }
   }
 })();
 
+window.onload = () => {
+  let tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
+  console.log('loaded', tempImgsArr);
+}
 uploadLabel.addEventListener('click', e => {
   e.preventDefault();
   fileInput.click();
 })
 addToCardArea.addEventListener('click', e => {
-  e.preventDefault();
   images().publish();
+  e.preventDefault();
 })
-
-
 
 fileInput.addEventListener('change', () => {
   upload(fileInput.files);
 })
-// get('body').addEventListener('click', (e) => {
-//   console.log(e.target.htmlFor);
-//   if (e.target.classList.contains('add')) {
-//     
-//   }
 
-//   e.preventDefault();
-// })
-// uploadLabel.addEventListener('click', function (e) {
-
-//   if (e.target.htmlFor === 'img-upload') {
-//     fileInput.click();
-//   };
-
-// });
-
-
-
+reader.addEventListener('load', () => images().add(reader.result))
 
 function upload(files) {
-  console.log('upload called')
-  // img.file = get('#img-upload').files[0];
-  // img.classList.add('obj');
-  // get('#card-area').prepend(img);
-  // var reader = new FileReader();
-  // reader.onload = (function (aImg) {
-  //   return function (e) {
-  //     console.log('hey')
-  //     aImg.src = e.target.result;
-  //     img.src = e.target.result;
-  //   };
-  // });
-  // reader.readAsDataURL(get('#img-upload').files[0]);
-  //Pass in blob instead
-  var img = document.createElement("img");
-  // console.log(files[0])
-  img.src = URL.createObjectURL(get('#img-upload').files[0]);
-  // reader = new FileReader();
-  // blob = new Blob([img], {
-  //   type: 'img/jpg'
-  // });
-  // reader.readAsArrayBuffer(blob);
-  // consreader.value
-  // console.log(img)
-  console.log('base called', getBase64Image(img))
-  images().add(img.src);
-  // img.onload = function () {
-  //   window.URL.revokeObjectURL(this.src);
-  // }
-
-  // fileInput.value = '';
+  console.log('upload called');
+  reader.readAsDataURL(get('#img-upload').files[0]);
 }
 
 
 
 function addToDOM(img) {
   const newIdea = document.createElement('section');
-  // const title = get('#title-input').value;
-  // const caption = get('#caption-input').value;
 
   get('#title-input').value = '';
   get("#caption-input").value = '';
-  console.log(img.file)
   newIdea.classList.add('card');
-  newIdea.dataset.id
+  newIdea.dataset.id = img.id;
+  newIdea.src = newIdea.file;
   newIdea.innerHTML = `\
   <p class="card-title">${img.title}</p>
   <img src="${img.file}" alt="images upload from users" class="card-img">
@@ -132,24 +88,6 @@ function addToDOM(img) {
   get('#card-area').prepend(newIdea);
 }
 
-
 function get(elem) {
   return document.querySelector(elem);
-}
-
-function getBase64Image(img) {
-  // imgCanvas = document.createElement('canvas');
-  // imgContext = imgCanvas.getContext('2d');
-  // imgCanvas.width = 180;
-  // imgCanvas.height = 240;
-
-  // imgContext.drawImage(img, 0, 0, img.width, img.height);
-  // const imgAsDURL = imgCanvas.toDataURL('image/png');
-  // localStorage.setItem('ii', imgAsDURL);
-
-  var canvas = document.createElement("canvas");
-  var context = canvas.getContext("2d");
-  context.drawImage(img, 0, 0); // i assume that img.src is your blob url
-  var dataurl = canvas.toDataURL("img/png");
-  return dataurl;
 }
