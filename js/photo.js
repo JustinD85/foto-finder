@@ -8,9 +8,6 @@ class Photo {
   }
 
   saveToStorage(imgArr, isNew) {
-    if (isNew) {
-      imgArr.push(this);
-    }
     localStorage.setItem('imgs', JSON.stringify(imgArr));
   }
   deleteFromStorage(imgArr, index) {
