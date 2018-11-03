@@ -84,7 +84,7 @@ nav .search-icon {
   width: 40%;
 }
 
-.card-area {
+#card-area {
   background: #c2b2b4;
   min-height: 600px;
   max-height: 700px;
@@ -116,7 +116,6 @@ nav .search-icon {
   object-fit: cover;
   width: 100%;
   height: 100%;
-
 }
 
 .card-desc {
@@ -133,6 +132,7 @@ footer {
 
 .hide {
   display: none;
+  position: absolute;
 }
 
 .text-c {
