@@ -10,14 +10,12 @@ class Photo {
   saveToStorage(imgArr, isNew) {
     localStorage.setItem('imgs', JSON.stringify(imgArr));
   }
-  deleteFromStorage(imgArr, index) {
-    imgArr.splice(index, 1);
+
+  deleteFromStorage(imgArr) {
     this.saveToStorage(imgArr);
   }
-  updatePhoto(title, imgUrl, caption, isFav) {
-    this.title = title;
-    this.file = imgUrl;
-    this.caption = caption;
-    this.favorite = isFav || false;
+
+  updatePhoto(imgArr) {
+    this.saveToStorage(imgArr)
   }
 }
