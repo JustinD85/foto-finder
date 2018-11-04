@@ -1,7 +1,7 @@
-const uploadLabel = get('#file-selector-label');
+const uploadButton = get('#file-selector-label');
 const fileInput = get('#img-upload');
 const cardArea = get('#card-area');
-const addToCardArea = get('#add');
+const addCardButton = get('#add');
 const reader = new FileReader();
 const favButton = get('.card-fav');
 const viewFavButton = get('#fav-button');
@@ -9,13 +9,13 @@ const viewFavButton = get('#fav-button');
 const images = (() => {
   const imagesArray = [];
   let tempImg = 0;
-  let snextId = 0;
+  let nextId = 0;
   return () => {
     return {
       add: (inUrl) => {
         const lastElementIndex = imagesArray.length - 1;
-        if (imagesArray.length !== 0) {
-          nextId = imagesArray[lastElementIndex].id + 1;
+        if (imagesArray.length > 0) {
+          nextId = parseInt(imagesArray[lastElementIndex].id) + 1;
         }
         const title = get('#title-input').value;
         const caption = get('#caption-input').value;
@@ -23,14 +23,11 @@ const images = (() => {
         tempImg = newImg;
       },
       remove: (inId) => {
-        console.log(inId)
-        const tempIndex = imagesArray.findIndex(obj => obj.id === inId);
-        imagesArray.splice(tempIndex, 1);
-        imagesArray[tempIndex].deleteFromStorage(imagesArray);
+        const tempIndex = imagesArray.findIndex(obj => obj.id == inId);
+        imagesArray[tempIndex].deleteFromStorage(imagesArray, tempIndex);
       },
       update: (inId) => {
         const tempIndex = imagesArray.findIndex(obj => obj.id === parseInt(inId));
-        // imagesArray[tempIndex].
       },
       asArray: () => (imagesArray),
       publish: () => {
@@ -42,6 +39,7 @@ const images = (() => {
         tempImg.saveToStorage(imagesArray);
         imagesArray.forEach(e => {
           addToDOM(e)
+          checkCanSubmit();
         })
       }
     }
@@ -57,18 +55,26 @@ window.onload = () => {
       addToDOM(tempCard);
       images().asArray().push(tempCard);
     });
-    console.log('# objs loaded', tempImgsArr);
+    console.log(`${tempImgsArr.length} objs loaded`, tempImgsArr);
   }
-  favs = images().asArray().filter(e => e.favorite === true).length;
-  viewFavButton.innerText = `View ${favs} Favorites`;
+  updateFavButton();
 }
 
-uploadLabel.addEventListener('click', e => {
+uploadButton.addEventListener('click', e => {
   e.preventDefault();
   fileInput.click();
 });
+getAll('.input-criteria').forEach(e => {
+  e.addEventListener('keyup', () => {
+    checkCanSubmit();
+  })
+})
 
-addToCardArea.addEventListener('click', e => {
+fileInput.addEventListener('change', () => {
+  checkCanSubmit();
+})
+
+addCardButton.addEventListener('click', e => {
   e.preventDefault();
   images().publish();
 });
@@ -84,26 +90,31 @@ cardArea.addEventListener('click', (e) => {
   if (e.target.closest('.card-fav')) {
     const inId = e.target.closest('.card').dataset.id;
     const atThisIndex = images().asArray().findIndex(e => e.id == inId);
-    const cardTitle = get(`.card[data-id='${inId}'] .card-title`).innerText;
-    const cardDesc = get(`.card[data-id='${inId}'] .card-desc`).innerText;
-    const cardFile = get(`.card[data-id='${inId}'] .card-img`).src;
+    // const cardTitle = get(`.card[data-id='${inId}'] .card-title`).innerText;
+    // const cardDesc = get(`.card[data-id='${inId}'] .card-desc`).innerText;
+    // const cardFile = get(`.card[data-id='${inId}'] .card-img`).src;
     const isFav = get(`.card[data-id='${inId}'] .card-fav`).attributes.src.value !== 'imgs/favorite-active.svg';
-    let favs;
+    // let favs;
     e.target.src = e.target.attributes.src.value == 'imgs/favorite-active.svg' ?
       'imgs/favorite.svg' : 'imgs/favorite-active.svg';
 
     //this will be update self function
-    images().asArray()[atThisIndex] = new Photo(inId, cardTitle, cardDesc, cardFile, isFav);
-    favs = images().asArray().filter(e => e.favorite === true).length;
-    viewFavButton.innerText = `View ${favs} Favorites`;
+    images().asArray()[atThisIndex].favorite = isFav;
+    updateFavButton();
+    images().asArray()[atThisIndex].updatePhoto(images().asArray());
   }
   if (e.target.closest('.card-trash')) {
     e.target.src = e.target.attributes.src.value == 'imgs/delete-active.svg' ?
       'imgs/delete.svg' : 'imgs/delete-active.svg';
   }
-})
+});
 
-//Delete Behaviour
+function updateFavButton() {
+  const favs = images().asArray().filter(e => e.favorite === true).length;
+  viewFavButton.innerText = `View ${favs} Favorites`;
+}
+
+//Delete icon Behaviour
 cardArea.addEventListener('mousedown', (e) => {
   if (e.target.closest('.card-trash')) {
     e.target.src = e.target.attributes.src.value == 'imgs/delete-active.svg' ?
@@ -125,14 +136,46 @@ cardArea.addEventListener('mouseup', (e) => {
     images().remove(e.target.closest('.card').dataset.id);
     e.target.closest('.card').remove();
   }
+  updateFavButton();
 });
 
+cardArea.addEventListener('focusout', editPhotoText);
+cardArea.addEventListener('keypress', editPhotoText);
 
-function upload(files) {
-  console.log('upload called');
-  reader.readAsDataURL(get('#img-upload').files[0]);
+function editPhotoText(event) {
+  if (event.keyCode === 13) {
+    var cardId = event.target.closest('.card').dataset.id;
+    var currentCardTitle = get(`.card[data-id='${cardId}'] .card-title`).innerText;
+    var currentCardCaption = get(`.card[data-id='${cardId}'] .card-desc`).innerText;
+
+    images().asArray().forEach((oldCard) => {
+      if (oldCard.id == cardId) {
+        oldCard.title = currentCardTitle;
+        oldCard.caption = currentCardCaption;
+        oldCard.updatePhoto(images().asArray());
+      }
+    });
+    event.target.blur();
+  }
+  if (event.target.classList.contains('card-title') ||
+    event.target.classList.contains('card-desc')) {
+    var cardId = event.target.closest('.card').dataset.id;
+    var currentCardTitle = get(`.card[data-id='${cardId}'] .card-title`).innerText;
+    var currentCardCaption = get(`.card[data-id='${cardId}'] .card-desc`).innerText;
+
+    images().asArray().forEach((oldCard) => {
+      if (oldCard.id == cardId) {
+        oldCard.title = currentCardTitle;
+        oldCard.caption = currentCardCaption;
+        oldCard.updatePhoto(images().asArray());
+      }
+    });
+  }
 }
 
+function upload(files) {
+  reader.readAsDataURL(get('#img-upload').files[0]);
+}
 
 function addToDOM(img) {
   const newIdea = document.createElement('section');
@@ -143,9 +186,9 @@ function addToDOM(img) {
   newIdea.dataset.id = img.id;
   newIdea.src = newIdea.file;
   newIdea.innerHTML = `\
-  <p class="card-title">${img.title}</p>
-  <img src="${img.file}" alt="images upload from users" class="card-img">
-  <p class="card-desc">${img.caption}</p>
+  <p class="card-title"  contenteditable="true">${img.title}</p>
+  <img src="${img.file}"  alt="images upload from users" class="card-img">
+  <p class="card-desc "  contenteditable="true">${img.caption}</p>
   <footer>
     <img class="card-trash" src="imgs/delete.svg" alt="Trash, to delete photo">
     <img class="card-fav" src="imgs/${tempFav}" alt="A button to like the photo">
@@ -155,4 +198,16 @@ function addToDOM(img) {
 
 function get(elem) {
   return document.querySelector(elem);
+}
+
+function getAll(elem) {
+  return document.querySelectorAll(elem);
+}
+
+function checkCanSubmit() {
+  const titleLength = get('#title-input').value.length;
+  const captionLength = get('#caption-input').value.length;
+  const inputLength = get('#img-upload').files.length;
+  get('#add').disabled = titleLength < 1 || captionLength < 1 || inputLength === 0;
+  console.log(get('#add').disabled);
 }
