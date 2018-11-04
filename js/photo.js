@@ -3,17 +3,19 @@ class Photo {
     this.id = inId;
     this.title = inTitle;
     this.caption = inCaption;
-    this.file = inURL;
+    this.file = inURL || 'nothing';
     this.favorite = inFav || false;
   }
 
-  saveToStorage() {
-
+  saveToStorage(imgArr, isNew) {
+    localStorage.setItem('imgs', JSON.stringify(imgArr));
   }
-  deleteFromStorage() {
 
+  deleteFromStorage(imgArr) {
+    this.saveToStorage(imgArr);
   }
-  updatePhoto() {
 
+  updatePhoto(imgArr) {
+    this.saveToStorage(imgArr)
   }
 }
