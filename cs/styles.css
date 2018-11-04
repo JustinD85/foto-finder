@@ -134,8 +134,13 @@ footer {
 .card-fav {
   width: 16%;
   height: 90%;
+  transition: .3s ease;
 }
 
+.card-trash:hover,
+.card-fav:hover {
+  transform: scale(1.1, 1.1);
+}
 
 .hide {
   display: none;
