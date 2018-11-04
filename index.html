@@ -26,18 +26,19 @@
     <article class="upload">
       <form>
         <label for="title-input">Title</label>
-        <input type="text" class="full-w" id="title-input">
+        <input type="text" class="full-w input-criteria" id="title-input">
         <label for="caption-input">Caption</label>
-        <input type="text" class="full-w" id="caption-input">
+        <input type="text" class="full-w input-criteria" id="caption-input">
         <label class="full-w text-c" id="file-selector-label" for="img-upload">
           Choose File </label>
-        <input type="file" class="hide" id="img-upload">
+        <input type="file" accept="image/*" class="hide" id="img-upload">
         <button class="half-w" id="fav-button">View Favorite</button>
-        <button class="half-w" id="add">Add to Album</button>
+        <button class="half-w" id="add" disabled>Add to Album</button>
       </form>
 
     </article>
     <main id="card-area">
+      <input type="file" accept="image/*" class="hide" id="img-change">
     </main>
     <script src="js/photo.js"></script>
     <script src="js/main.js"></script>
