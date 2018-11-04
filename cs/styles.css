@@ -130,6 +130,13 @@ footer {
   justify-content: space-between;
 }
 
+.card-trash,
+.card-fav {
+  width: 16%;
+  height: 90%;
+}
+
+
 .hide {
   display: none;
   position: absolute;

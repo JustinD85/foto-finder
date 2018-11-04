@@ -19,9 +19,7 @@ const images = (() => {
         }
         const title = get('#title-input').value;
         const caption = get('#caption-input').value;
-        // console.log(inUrl);
         const newImg = new Photo(nextId, title, caption, inUrl, false);
-        //add to temp
         tempImg = newImg;
       },
       remove: 'remove from local storage and datamodel',
@@ -35,7 +33,6 @@ const images = (() => {
         }
         tempImg.saveToStorage(imagesArray);
         imagesArray.forEach(e => {
-
           addToDOM(e)
         })
       }
@@ -44,16 +41,23 @@ const images = (() => {
 })();
 
 window.onload = () => {
-  let tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
-  console.log('loaded', tempImgsArr);
+  if (localStorage.getItem('imgs') !== null) {
+    let tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
+    tempImgsArr.forEach(ele => {
+      let tempCard = new Photo(ele.id, ele.title, ele.caption, ele.file, ele.favorite);
+      addToDOM(tempCard);
+      images().get().push(tempCard);
+      console.log('loaded', tempImgsArr);
+    });
+  }
 }
 uploadLabel.addEventListener('click', e => {
   e.preventDefault();
   fileInput.click();
 })
 addToCardArea.addEventListener('click', e => {
-  images().publish();
   e.preventDefault();
+  images().publish();
 })
 
 fileInput.addEventListener('change', () => {
@@ -82,8 +86,8 @@ function addToDOM(img) {
   <img src="${img.file}" alt="images upload from users" class="card-img">
   <p class="card-desc">${img.caption}</p>
   <footer>
-    <span class="card-trash"><i class="fas fa-trash-alt"></i></span>
-    <span class="card-fav"><i class="fas fa-heart"></i></span>
+    <img class="card-trash" src="imgs/delete.svg" alt="Trash, to delete photo">
+    <img class="card-fav" src="imgs/favorite.svg" alt="A button to like the photo">
   </footer>`;
   get('#card-area').prepend(newIdea);
 }
