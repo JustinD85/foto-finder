@@ -213,7 +213,6 @@ function uploadFile(e) {
   upload(fileInput.files);
 }
 
-
 function updateFavButton() {
   const favs = images().asArray().filter(e => e.favorite === true).length;
   viewFavButton.innerText = `View ${favs} Favorites`;
@@ -259,12 +258,14 @@ function showMore(e) {
   images().asArray().forEach(img => addToDOM(img));
   get('.show-more-button').classList.value = 'show-less-button';
   get('.show-less-button').innerText = 'Show Less';
+  updateFavButton();
 }
 
 function showLess(e) {
   showOnlyTen();
   get('.show-less-button').classList.value = 'show-more-button';
   get('.show-more-button').innerText = 'Show More';
+  updateFavButton();
 }
 
 function showMoreOrLess(e) {
@@ -338,9 +339,9 @@ function addToDOM(img) {
   newIdea.dataset.id = img.id;
   newIdea.src = newIdea.file;
   newIdea.innerHTML = `\
-  <p class="card-title searchable"  contenteditable="true">${img.title}</p>
+  <p class="card-title searchable" maxlength="20" contenteditable="true">${img.title}</p>
   <img src="${img.file}"  alt="images upload from users" class="card-img">
-  <p class="card-desc searchable"  contenteditable="true">${img.caption}</p>
+  <p class="card-desc searchable" maxlength="100" contenteditable="true">${img.caption}</p>
   <footer>
     <img class="card-trash" src="imgs/delete.svg" alt="Trash, to delete photo">
     <img class="card-fav" src="imgs/${tempFav}" alt="A button to like the photo">

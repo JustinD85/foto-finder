@@ -157,6 +157,7 @@ nav .search-icon {
 .card-title {
   margin-left: 4%;
   justify-self: auto;
+  overflow: scroll;
 }
 
 .card-img {
@@ -167,6 +168,7 @@ nav .search-icon {
 
 .card-desc {
   padding: 0 4%;
+  overflow: scroll;
 }
 
 footer {
