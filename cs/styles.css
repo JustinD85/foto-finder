@@ -76,14 +76,11 @@ nav .search-icon {
   justify-content: space-between;
 }
 
-/* #file-selector-label{
-  background
-} */
-
 .upload form :nth-child(n+4),
 #title-input,
 #caption-input {
   margin: 5% 0;
+  padding-left: 5px;
   line-height: 2rem;
   border-radius: 3px;
   border: none;
@@ -160,6 +157,7 @@ nav .search-icon {
 .card-title {
   margin-left: 4%;
   justify-self: auto;
+  overflow: scroll;
 }
 
 .card-img {
@@ -170,6 +168,7 @@ nav .search-icon {
 
 .card-desc {
   padding: 0 4%;
+  overflow: scroll;
 }
 
 footer {
