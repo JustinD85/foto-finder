@@ -6,7 +6,8 @@ const reader = new FileReader();
 const reader2 = new FileReader();
 const favButton = get('.card-fav');
 const viewFavButton = get('#fav-button');
-
+const searchEle = get('#search');
+const showMoreLessBtn = get('.show-more')
 const images = (() => {
   const imagesArray = [];
   let tempImg = 0;
@@ -50,19 +51,68 @@ const images = (() => {
 })();
 
 window.onload = () => {
-  let favs;
   if (localStorage.getItem('imgs') !== null) {
-    let tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
+    const tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
     tempImgsArr.forEach(ele => {
-      let tempCard = new Photo(ele.id, ele.title, ele.caption, ele.file, ele.favorite);
-      addToDOM(tempCard);
+      const tempCard = new Photo(ele.id, ele.title, ele.caption, ele.file, ele.favorite);
       images().asArray().push(tempCard);
     });
     console.log(`${tempImgsArr.length} objs loaded`, tempImgsArr);
   }
+  showOnlyTen();
+  checkNoCards();
   updateFavButton();
 }
 
+viewFavButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  removeCardsFromDOM();
+  if (viewFavButton.innerText.includes('View')) {
+    showFavorite();
+    viewFavButton.innerText = 'Show All';
+  } else {
+    updateFavButton();
+    showAll();
+  }
+})
+
+function showMore(e) {
+  console.log('show more')
+  removeCardsFromDOM();
+  images().asArray().forEach(img => addToDOM(img));
+  get('.show-more-button').classList.value = 'show-less-button';
+  get('.show-less-button').innerText = 'Show Less';
+}
+
+function showLess(e) {
+  console.log('show less')
+  showOnlyTen();
+  get('.show-less-button').classList.value = 'show-more-button';
+  get('.show-more-button').innerText = 'Show More';
+}
+
+function showMoreOrLess(e) {
+  if (e.target.classList.contains('show-more-button')) {
+    showMore(e)
+  } else if (e.target.classList.contains('show-less-button')) {
+    showLess(e)
+  }
+  return true;
+}
+
+searchEle.addEventListener('keyup', (event) => {
+  removeCardsFromDOM();
+  if (viewFavButton.innerText.includes('View')) {
+    showAll();
+  } else {
+    showFavorite();
+  }
+  showFiltered();
+})
+
+function removeCardsFromDOM() {
+  get('#card-area').innerHTML = '';
+}
 uploadButton.addEventListener('click', e => {
   e.preventDefault();
   fileInput.click();
@@ -92,11 +142,11 @@ reader2.addEventListener('load', () => {
   changeCardImg(images().src.get, reader2.result);
 });
 
+
 function changeCardImg(id, src) {
   get(`.card[data-id='${id}'] img`).src = src;
-
   images().asArray()[findIndex(id)].updatePhoto(src, images().asArray());
-  // images().asArray[findIndex(id)]
+
 }
 
 function findIndex(inId) {
@@ -111,17 +161,7 @@ cardArea.addEventListener('click', (e) => {
 
     e.target.src = e.target.attributes.src.value == 'imgs/favorite-active.svg' ?
       'imgs/favorite.svg' : 'imgs/favorite-active.svg';
-    /*
-        function(inId){
-          const atThisIndex = images().asArray().findIndex(e => e.id == inId);
-          const cardId = get(`.card[data-id='${cardId}']).dataset.id;
-          const title = get(`.card[data-id='${cardId}'] .card-title`).innerText;
-          const caption = get(`.card[data-id='${cardId}'] .card-desc`).innerText;
-          const isFav = get(`.card[data-id='${inId}'] .card-fav`).attributes.src.value !== 'imgs/favorite-active.svg'; 
-          
-        }
-    */
-    //this will be update self function
+
     images().asArray()[atThisIndex].favorite = isFav;
     updateFavButton();
     images().asArray()[atThisIndex].saveToStorage(images().asArray());
@@ -136,6 +176,15 @@ cardArea.addEventListener('click', (e) => {
     get('#img-change').click();
   }
 });
+
+get('body').addEventListener('click', (e) => {
+  console.log(e.target.closest('.show-more-or-less'));
+  if (e.target.closest('.show-more-or-less')) {
+    console.log('hey')
+    showMoreOrLess(e);
+  }
+
+})
 
 function updateFavButton() {
   const favs = images().asArray().filter(e => e.favorite === true).length;
@@ -163,10 +212,20 @@ cardArea.addEventListener('mouseup', (e) => {
     e.target.attributes.src.value === 'imgs/delete-active.svg') {
     images().remove(e.target.closest('.card').dataset.id);
     e.target.closest('.card').remove();
+    checkNoCards();
+
   }
   updateFavButton();
 });
 
+function checkNoCards() {
+  if (get('#card-area').childElementCount < 1) {
+    const newEle = document.createElement('h1');
+    newEle.classList.add('text-c');
+    newEle.innerText = 'Add Photos!';
+    get('#card-area').appendChild(newEle);
+  }
+}
 cardArea.addEventListener('focusout', editPhotoText);
 cardArea.addEventListener('keypress', editPhotoText);
 
@@ -219,9 +278,9 @@ function addToDOM(img) {
   newIdea.dataset.id = img.id;
   newIdea.src = newIdea.file;
   newIdea.innerHTML = `\
-  <p class="card-title"  contenteditable="true">${img.title}</p>
+  <p class="card-title searchable"  contenteditable="true">${img.title}</p>
   <img src="${img.file}"  alt="images upload from users" class="card-img">
-  <p class="card-desc "  contenteditable="true">${img.caption}</p>
+  <p class="card-desc searchable"  contenteditable="true">${img.caption}</p>
   <footer>
     <img class="card-trash" src="imgs/delete.svg" alt="Trash, to delete photo">
     <img class="card-fav" src="imgs/${tempFav}" alt="A button to like the photo">
@@ -243,4 +302,29 @@ function checkCanSubmit() {
   const inputLength = get('#img-upload').files.length;
   get('#add').disabled = titleLength < 1 || captionLength < 1 || inputLength === 0;
   return !get('#add').disabled;
+}
+
+function showOnlyTen() {
+  removeCardsFromDOM();
+  images().asArray().filter((idea, index) => {
+    return index >= images().asArray().length - 10;
+  }).forEach(idea => addToDOM(idea));
+}
+
+function showAll() {
+  images().asArray().forEach(e => addToDOM(e));
+}
+
+function showFiltered() {
+  getAll('.card').forEach(elem => {
+    !elem.innerText.includes(event.target.value) &&
+      elem.closest('.card').remove();
+  });
+}
+
+function showFavorite() {
+  const favCards = images().asArray().filter(e => {
+    return e.favorite;
+  })
+  favCards.forEach(e => addToDOM(e));
 }

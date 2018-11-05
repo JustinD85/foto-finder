@@ -104,15 +104,20 @@ nav .search-icon {
 
 #add,
 #fav-button,
-#file-selector-label {
+#file-selector-label,
+.show-more-button,
+.show-less-button {
   color: #fff;
   border-radius: 1px;
   background: #5b4447;
+  border: none;
 }
 
 #add:hover:enabled,
 #fav-button:hover:enabled,
-#file-selector-label:hover {
+#file-selector-label:hover,
+.show-more-button:hover,
+.show-less-button:hover {
   background: #938284;
   cursor: pointer;
 }
@@ -155,7 +160,6 @@ nav .search-icon {
 .card-title {
   margin-left: 4%;
   justify-self: auto;
-  /* height: 5%; */
 }
 
 .card-img {
@@ -196,6 +200,28 @@ footer {
 .text-c {
   text-align: center;
 }
+
+.show-more-or-less {
+  display: grid;
+  grid-column-gap: 2%;
+  grid-row-gap: 10px;
+  grid-template-columns: 1fr;
+  margin: 10px auto;
+  height: 2rem;
+  max-width: 700px;
+  width: 20%;
+}
+
+/* .show-more-button,
+.show-less-button {
+  background-color: #5f5b6c;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  height: 30px;
+} */
 
 @media screen and (min-width: 1200px) {
   body {
