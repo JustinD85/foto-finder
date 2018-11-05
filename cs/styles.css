@@ -17,6 +17,9 @@ nav {
   padding: 2% 2%;
 }
 
+#camera-logo {
+  height: 2.1rem;
+}
 
 .title {
   font-weight: 800;
