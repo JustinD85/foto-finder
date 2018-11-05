@@ -11,11 +11,13 @@ class Photo {
     localStorage.setItem('imgs', JSON.stringify(imgArr));
   }
 
-  deleteFromStorage(imgArr) {
+  deleteFromStorage(imgArr, index) {
+    imgArr.splice(index, 1);
     this.saveToStorage(imgArr);
   }
 
-  updatePhoto(imgArr) {
-    this.saveToStorage(imgArr)
+  updatePhoto(inFile, imgArr) {
+    this.file = inFile;
+    this.saveToStorage(imgArr);
   }
 }
