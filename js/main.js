@@ -7,6 +7,7 @@ const reader2 = new FileReader();
 const favButton = get('.card-fav');
 const viewFavButton = get('#fav-button');
 const searchEle = get('#search');
+const showMoreLessBtn = get('.show-more')
 const images = (() => {
   const imagesArray = [];
   let tempImg = 0;
@@ -63,13 +64,49 @@ window.onload = () => {
   updateFavButton();
 }
 
-viewFavButton.addEventListener('click', () => {
-
+viewFavButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  removeCardsFromDOM();
+  if (viewFavButton.innerText.includes('View')) {
+    showFavorite();
+    viewFavButton.innerText = 'Show All';
+  } else {
+    updateFavButton();
+    showAll();
+  }
 })
+
+function showMore(e) {
+  console.log('show more')
+  removeCardsFromDOM();
+  images().asArray().forEach(img => addToDOM(img));
+  get('.show-more-button').classList.value = 'show-less-button';
+  get('.show-less-button').innerText = 'Show Less';
+}
+
+function showLess(e) {
+  console.log('show less')
+  showOnlyTen();
+  get('.show-less-button').classList.value = 'show-more-button';
+  get('.show-more-button').innerText = 'Show More';
+}
+
+function showMoreOrLess(e) {
+  if (e.target.classList.contains('show-more-button')) {
+    showMore(e)
+  } else if (e.target.classList.contains('show-less-button')) {
+    showLess(e)
+  }
+  return true;
+}
 
 searchEle.addEventListener('keyup', (event) => {
   removeCardsFromDOM();
-  showAll();
+  if (viewFavButton.innerText.includes('View')) {
+    showAll();
+  } else {
+    showFavorite();
+  }
   showFiltered();
 })
 
@@ -139,6 +176,15 @@ cardArea.addEventListener('click', (e) => {
     get('#img-change').click();
   }
 });
+
+get('body').addEventListener('click', (e) => {
+  console.log(e.target.closest('.show-more-or-less'));
+  if (e.target.closest('.show-more-or-less')) {
+    console.log('hey')
+    showMoreOrLess(e);
+  }
+
+})
 
 function updateFavButton() {
   const favs = images().asArray().filter(e => e.favorite === true).length;
@@ -274,4 +320,11 @@ function showFiltered() {
     !elem.innerText.includes(event.target.value) &&
       elem.closest('.card').remove();
   });
+}
+
+function showFavorite() {
+  const favCards = images().asArray().filter(e => {
+    return e.favorite;
+  })
+  favCards.forEach(e => addToDOM(e));
 }
