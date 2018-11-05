@@ -6,7 +6,7 @@ const reader = new FileReader();
 const reader2 = new FileReader();
 const favButton = get('.card-fav');
 const viewFavButton = get('#fav-button');
-
+const searchEle = get('#search');
 const images = (() => {
   const imagesArray = [];
   let tempImg = 0;
@@ -50,19 +50,32 @@ const images = (() => {
 })();
 
 window.onload = () => {
-  let favs;
   if (localStorage.getItem('imgs') !== null) {
-    let tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
+    const tempImgsArr = JSON.parse(localStorage.getItem('imgs'));
     tempImgsArr.forEach(ele => {
-      let tempCard = new Photo(ele.id, ele.title, ele.caption, ele.file, ele.favorite);
-      addToDOM(tempCard);
+      const tempCard = new Photo(ele.id, ele.title, ele.caption, ele.file, ele.favorite);
       images().asArray().push(tempCard);
     });
     console.log(`${tempImgsArr.length} objs loaded`, tempImgsArr);
   }
+  showOnlyTen();
+  checkNoCards();
   updateFavButton();
 }
 
+viewFavButton.addEventListener('click', () => {
+
+})
+
+searchEle.addEventListener('keyup', (event) => {
+  removeCardsFromDOM();
+  showAll();
+  showFiltered();
+})
+
+function removeCardsFromDOM() {
+  get('#card-area').innerHTML = '';
+}
 uploadButton.addEventListener('click', e => {
   e.preventDefault();
   fileInput.click();
@@ -92,11 +105,11 @@ reader2.addEventListener('load', () => {
   changeCardImg(images().src.get, reader2.result);
 });
 
+
 function changeCardImg(id, src) {
   get(`.card[data-id='${id}'] img`).src = src;
-
   images().asArray()[findIndex(id)].updatePhoto(src, images().asArray());
-  // images().asArray[findIndex(id)]
+
 }
 
 function findIndex(inId) {
@@ -111,17 +124,7 @@ cardArea.addEventListener('click', (e) => {
 
     e.target.src = e.target.attributes.src.value == 'imgs/favorite-active.svg' ?
       'imgs/favorite.svg' : 'imgs/favorite-active.svg';
-    /*
-        function(inId){
-          const atThisIndex = images().asArray().findIndex(e => e.id == inId);
-          const cardId = get(`.card[data-id='${cardId}']).dataset.id;
-          const title = get(`.card[data-id='${cardId}'] .card-title`).innerText;
-          const caption = get(`.card[data-id='${cardId}'] .card-desc`).innerText;
-          const isFav = get(`.card[data-id='${inId}'] .card-fav`).attributes.src.value !== 'imgs/favorite-active.svg'; 
-          
-        }
-    */
-    //this will be update self function
+
     images().asArray()[atThisIndex].favorite = isFav;
     updateFavButton();
     images().asArray()[atThisIndex].saveToStorage(images().asArray());
@@ -163,10 +166,20 @@ cardArea.addEventListener('mouseup', (e) => {
     e.target.attributes.src.value === 'imgs/delete-active.svg') {
     images().remove(e.target.closest('.card').dataset.id);
     e.target.closest('.card').remove();
+    checkNoCards();
+
   }
   updateFavButton();
 });
 
+function checkNoCards() {
+  if (get('#card-area').childElementCount < 1) {
+    const newEle = document.createElement('h1');
+    newEle.classList.add('text-c');
+    newEle.innerText = 'Add Photos!';
+    get('#card-area').appendChild(newEle);
+  }
+}
 cardArea.addEventListener('focusout', editPhotoText);
 cardArea.addEventListener('keypress', editPhotoText);
 
@@ -219,9 +232,9 @@ function addToDOM(img) {
   newIdea.dataset.id = img.id;
   newIdea.src = newIdea.file;
   newIdea.innerHTML = `\
-  <p class="card-title"  contenteditable="true">${img.title}</p>
+  <p class="card-title searchable"  contenteditable="true">${img.title}</p>
   <img src="${img.file}"  alt="images upload from users" class="card-img">
-  <p class="card-desc "  contenteditable="true">${img.caption}</p>
+  <p class="card-desc searchable"  contenteditable="true">${img.caption}</p>
   <footer>
     <img class="card-trash" src="imgs/delete.svg" alt="Trash, to delete photo">
     <img class="card-fav" src="imgs/${tempFav}" alt="A button to like the photo">
@@ -243,4 +256,22 @@ function checkCanSubmit() {
   const inputLength = get('#img-upload').files.length;
   get('#add').disabled = titleLength < 1 || captionLength < 1 || inputLength === 0;
   return !get('#add').disabled;
+}
+
+function showOnlyTen() {
+  removeCardsFromDOM();
+  images().asArray().filter((idea, index) => {
+    return index >= images().asArray().length - 10;
+  }).forEach(idea => addToDOM(idea));
+}
+
+function showAll() {
+  images().asArray().forEach(e => addToDOM(e));
+}
+
+function showFiltered() {
+  getAll('.card').forEach(elem => {
+    !elem.innerText.includes(event.target.value) &&
+      elem.closest('.card').remove();
+  });
 }
