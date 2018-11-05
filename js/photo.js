@@ -16,7 +16,8 @@ class Photo {
     this.saveToStorage(imgArr);
   }
 
-  updatePhoto(imgArr) {
-    this.saveToStorage(imgArr)
+  updatePhoto(inFile, imgArr) {
+    this.file = inFile;
+    this.saveToStorage(imgArr);
   }
 }
