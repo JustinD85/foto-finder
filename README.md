@@ -3,7 +3,8 @@
 ## The goal of this project was to create a page where a user could share their photos and have them persist in localstorage.
 
 ## Original Comp
-![Original Comp](https://user-images.githubusercontent.com/40923979/47827494-d6bc1d80-dd43-11e8-97f5-54d54106ca04.png)
+![Original Comp](<img width="543" alt="screen shot 2018-11-07 at 8 48 46 am" src="https://user-images.githubusercontent.com/18714169/48142583-46fa0000-e26a-11e8-8407-afb71f4c12fe.png">)
+
 
 
 ## Our Version
@@ -11,7 +12,7 @@
 
 
 ## Original Mobile Layout
-![Original Mobile](https://user-images.githubusercontent.com/40923979/47827590-6f529d80-dd44-11e8-9404-78577d950258.png)
+![Original Mobile](<img width="364" alt="screen shot 2018-11-07 at 8 49 02 am" src="https://user-images.githubusercontent.com/18714169/48142594-49f4f080-e26a-11e8-9a31-f253f6abaed8.png">)
 
 
 ## Our Mobile Layout
