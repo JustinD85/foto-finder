@@ -1,6 +1,6 @@
-# Ideabox-Triples 
+# Foto-Finder
 
-## The goal of this project was to create a page where a user could share their ideas and save them in local storage. The ideas consist of title, body, and quality.The site is fully responsive and all requirements have been met!
+## The goal of this project was to create a page where a user could share their photos and have them persist in localstorage.
 
 ## Original Comp
 ![Original Comp](https://user-images.githubusercontent.com/40923979/47827494-d6bc1d80-dd43-11e8-97f5-54d54106ca04.png)
