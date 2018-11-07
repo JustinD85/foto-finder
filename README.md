@@ -7,7 +7,7 @@
 
 
 ## Our Version
-![Our Verison](https://user-images.githubusercontent.com/40923979/47827466-ad02f680-dd43-11e8-83e3-3294fa7e2edf.png)
+![screencapture-justind85-github-io-jf-foto-finder-2018-11-07-08_44_24](https://user-images.githubusercontent.com/18714169/48142212-9429a200-e269-11e8-9ab6-f3c865aee228.png)
 
 
 ## Original Mobile Layout
@@ -15,6 +15,6 @@
 
 
 ## Our Mobile Layout
-![Our Mobile](https://user-images.githubusercontent.com/40923979/47827604-7d082300-dd44-11e8-8b8e-9cd869d902a4.png)
+![screencapture-justind85-github-io-jf-foto-finder-2018-11-07-08_45_12](https://user-images.githubusercontent.com/18714169/48142214-95f36580-e269-11e8-906e-fd66950ed44c.png)
 
 [APP Link](https://dfordeveloper.github.io/ideabox-triples/)
