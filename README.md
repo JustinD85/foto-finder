@@ -10,5 +10,3 @@
 
 ## Mobile Layout
 ![screencapture-justind85-github-io-jf-foto-finder-2018-11-07-08_45_12](https://user-images.githubusercontent.com/18714169/48142214-95f36580-e269-11e8-906e-fd66950ed44c.png)
-
-[APP Link](https://dfordeveloper.github.io/ideabox-triples/)
